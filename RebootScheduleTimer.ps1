@@ -41,7 +41,7 @@ See LICENSE in the project root for license information.
     {$time1="0"+$combobox1.SelectedItem.ToString()}
 	else
     {$time1=$combobox1.SelectedItem.ToString()}
-	(schtasks /create /sc once /tn "Post Maintenance Restart" /tr "shutdown /r /f" /st $time1 /f)
+	(schtasks /create /sc once /ru System /tn "Post Maintenance Restart" /tr "shutdown /r /f" /st $time1 /f)
                      } 
 function Main {
 
