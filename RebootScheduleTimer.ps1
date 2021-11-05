@@ -25,8 +25,7 @@ See LICENSE in the project root for license information.
 #                                     			 		                    #
 #############################################################################
 #>
- 
-#----------------------------------------------
+ #----------------------------------------------
 #region Import Assemblies
 #----------------------------------------------
 [void][Reflection.Assembly]::Load('System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
@@ -38,8 +37,12 @@ See LICENSE in the project root for license information.
 #Param ($CustomParameter)
  	#Function to create the task schedule from the time selected from the combobox
 	function schedule {
-	$time=$combobox1.SelectedItem.ToString() 
-	(schtasks /create /sc once /tn "Post Maintenance Restart" /tr "shutdown /r /f" /st $time /f)
+    if (($combobox1.SelectedItem.ToString() -split ':')[0].length -lt 2)
+    {$time1="0"+$combobox1.SelectedItem.ToString()}
+	else
+    {$time1=$combobox1.SelectedItem.ToString()}
+    write-host $time1
+	(schtasks /create /sc once /tn "Post Maintenance Restart" /tr "shutdown /r /f" /st $time1 /f)
                      } 
 function Main {
 
@@ -94,7 +97,7 @@ function Call-MainForm_psf
  # User Generated Script
  #----------------------------------------------
  $TotalTime = 900 #in seconds
- $time = Get-Date -format "HH:mm:ss"
+ $time2 = Get-Date -format "HH:mm:ss"
  
  $MainForm_Load={
  #TODO: Initialize Form Controls here
@@ -188,7 +191,8 @@ function Call-MainForm_psf
  $ButtonCancel_Click={
  #TODO: Place custom script here
 	 	schedule
- 		$MainForm.Close()
+ 		#$MainForm.Close()
+
  }
  
  $labelITSystemsMaintenance_Click={
@@ -206,10 +210,10 @@ function Call-MainForm_psf
  #TODO: Place custom script here
  
  }
- $MainForm.Add_FormClosing({
- [System.Windows.MessageBox]::Show('Your Computer will automatically restart in 5 minutes!','Warning')
- Start-Sleep -Seconds 300 ; Restart-Computer -Force
- })
+ #$MainForm.Add_FormClosing({
+ #[System.Windows.MessageBox]::Show('Your Computer will automatically restart in 5 minutes!','Warning')
+ #Start-Sleep -Seconds 300 ; Restart-Computer -Force
+ #})
 
  # --End User Generated Script--
  #----------------------------------------------
