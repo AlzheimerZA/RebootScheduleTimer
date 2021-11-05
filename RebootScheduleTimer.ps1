@@ -25,7 +25,7 @@ See LICENSE in the project root for license information.
 #                                     			 		                    #
 #############################################################################
 #>
- #----------------------------------------------
+#----------------------------------------------
 #region Import Assemblies
 #----------------------------------------------
 [void][Reflection.Assembly]::Load('System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
@@ -41,7 +41,6 @@ See LICENSE in the project root for license information.
     {$time1="0"+$combobox1.SelectedItem.ToString()}
 	else
     {$time1=$combobox1.SelectedItem.ToString()}
-    write-host $time1
 	(schtasks /create /sc once /tn "Post Maintenance Restart" /tr "shutdown /r /f" /st $time1 /f)
                      } 
 function Main {
@@ -106,6 +105,13 @@ function Call-MainForm_psf
  $script:StartTime = (Get-Date).AddSeconds($TotalTime)
  #Start the timer
  $timerUpdate.Start()
+
+ $MainForm.MaximizeBox = $False
+ $MainForm.MinimizeBox = $False
+ $MainForm.ControlBox = $False
+ $MainForm.ShowInTaskbar = $False
+ $MainForm.Hide()
+ $MainForm.TopMost = $True
  }
  
  $timerUpdate_Tick={
