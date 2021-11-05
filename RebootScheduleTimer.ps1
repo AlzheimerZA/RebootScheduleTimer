@@ -191,7 +191,7 @@ function Call-MainForm_psf
  $ButtonCancel_Click={
  #TODO: Place custom script here
 	 	schedule
- 		#$MainForm.Close()
+ 		$MainForm.Close()
 
  }
  
