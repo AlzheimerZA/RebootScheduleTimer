@@ -19,10 +19,11 @@ See LICENSE in the project root for license information.
 #   Our suppliers from and against any claims or lawsuits, including        #
 #   attorneys' fees, that arise or result from the use or distribution      #
 #   of the Sample Code.                                                     #
-#                                     			 		                    #
+#                                     			 		    #
 #   Author: John Guy                                                        #
-#   Version 1.0         Date Last modified:      4 November 2021             #
-#                                     			 		                    #
+#   Version 1.0         Date Last modified:      4 November 2021 	    #
+#   Version 2.0		Date Last modified:      21 April 2023 		    #
+#                                     			 		    #
 #############################################################################
 #>
 #----------------------------------------------
@@ -33,24 +34,30 @@ See LICENSE in the project root for license information.
 [void][Reflection.Assembly]::Load('System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a')
 #endregion Import Assemblies
  
-#Define a Param block to use custom parameters in the project
-#Param ($CustomParameter)
- 	#Function to create the task schedule from the time selected from the combobox
+#Function to create the task schedule from the time selected from the combobox
 	function schedule {
-    if (($combobox1.SelectedItem.ToString() -split ':')[0].length -lt 2)
-    {$time1="0"+$combobox1.SelectedItem.ToString()}
-	else
-    {$time1=$combobox1.SelectedItem.ToString()}
+
+if ($comboBox1.Text -eq "" -or $comboBox1.Text -eq $null) {
+#If combobox selection is empty, pop-up with a warning 
+    [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+    $messageBoxButtons = [System.Windows.Forms.MessageBoxButtons]::OK
+    $messageBoxIcon = [System.Windows.Forms.MessageBoxIcon]::Warning
+    $messageBoxTitle = "Warning"
+    $messageBoxMessage = "Please select a Time from the combo box to schedule!"
+    [System.Windows.Forms.MessageBox]::Show($messageBoxMessage, $messageBoxTitle, $messageBoxButtons, $messageBoxIcon)
+
+}   elseif (($combobox1.SelectedItem.ToString() -split ':')[0].length -lt 2) {
+    $time1="0"+$combobox1.SelectedItem.ToString()
+}
+    else   {
+    $time1=$combobox1.SelectedItem.ToString()
 	(schtasks /create /sc once /ru System /tn "Post Maintenance Restart" /tr "shutdown /r /f" /st $time1 /f)
-                     } 
+    $MainForm.Close()
+    }
+} 
 function Main {
 
  Param ([String]$Commandline)
- 
- #--------------------------------------------------------------------------
- #TODO: Add initialization script here (Load modules and check requirements)
- 
- #--------------------------------------------------------------------------
  
  if((Call-MainForm_psf) -eq 'OK')
  {
@@ -197,7 +204,7 @@ function Call-MainForm_psf
  $ButtonCancel_Click={
  #TODO: Place custom script here
 	 	schedule
- 		$MainForm.Close()
+ 		
 
  }
  
